@@ -1,3 +1,7 @@
+# ==================================================
+# FraudShield Pro — .gitignore
+# ==================================================
+
 # --------------------------------------------------
 # Python cache & compiled files
 # --------------------------------------------------
@@ -5,20 +9,24 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.pycache
 
 # --------------------------------------------------
 # Virtual environments
 # --------------------------------------------------
 venv/
-.env/
-.env.*
 venv_fraud/
+.venv/
+env/
+.env
+.env.*
 
 # --------------------------------------------------
 # Jupyter / IPython
 # --------------------------------------------------
 .ipynb_checkpoints/
 profile_default/
+ipython_config.py
 
 # --------------------------------------------------
 # OS & editor files
@@ -27,45 +35,74 @@ profile_default/
 Thumbs.db
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 
 # --------------------------------------------------
-# Logs
+# Logs & debug output
 # --------------------------------------------------
 *.log
+logs/
+debug.log
 
 # --------------------------------------------------
-# Data files (optional – adjust as needed)
+# Data files (raw training data — too large for git)
 # --------------------------------------------------
 *.csv
 *.xlsx
 *.parquet
+*.feather
+*.json.gz
+data/
+raw_data/
 
 # --------------------------------------------------
-# Model artifacts (large files)
+# Model artifacts (large binary files)
 # --------------------------------------------------
 *.pkl
 *.joblib
 *.h5
 *.model
+*.bin
+*.pt
+*.pth
 
-# Allow the specific production models
-!output_v2/*.pkl
+# Allow ONLY the production model artifacts needed to run the API
+!output_v2/best_model.pkl
+!output_v2/feature_names.pkl
+!output_v2/feature_stats.pkl
+!output_v2/model_info.pkl
 
 # --------------------------------------------------
-# Output directory (generated files)
+# Intermediate training outputs (generated, not source)
 # --------------------------------------------------
 output/
+catboost_info/
 
 # --------------------------------------------------
-# Streamlit
-# --------------------------------------------------
-.streamlit/
-
-# --------------------------------------------------
-# Testing & temporary files
+# Temporary & test files
 # --------------------------------------------------
 tmp/
 temp/
+scratch/
+*.tmp
 
+# --------------------------------------------------
+# Secrets & credentials (NEVER commit these)
+# --------------------------------------------------
+secrets.yaml
+config.yaml
+credentials.json
+.env.local
+.env.production
 
-catboost_info/
+# --------------------------------------------------
+# Docker
+# --------------------------------------------------
+.dockerignore
+
+# --------------------------------------------------
+# Streamlit (if used)
+# --------------------------------------------------
+.streamlit/

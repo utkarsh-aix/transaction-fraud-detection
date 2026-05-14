@@ -12,6 +12,7 @@ __pycache__/
 venv/
 .env/
 .env.*
+venv_fraud/
 
 # --------------------------------------------------
 # Jupyter / IPython
@@ -46,6 +47,9 @@ Thumbs.db
 *.joblib
 *.h5
 *.model
+
+# Allow the specific production models
+!output_v2/*.pkl
 
 # --------------------------------------------------
 # Output directory (generated files)

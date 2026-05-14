@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraudShield Pro | AI Intelligence Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #a855f7;
+            --secondary: #06b6d4;
+            --bg: #020617;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --text: #f8fafc;
+            --text-dim: #64748b;
+            --fraud: #ff0055;
+            --safe: #00ffaa;
+            --warning: #facc15;
+            --border: #1e293b;
+            --glow: rgba(168, 85, 247, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Digital Grid Background */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        /* Animated Scanline */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: rgba(168, 85, 247, 0.1);
+            opacity: 0.5;
+            z-index: 100;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { top: -5%; }
+            100% { top: 105%; }
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            z-index: 10;
+        }
+
+        .main-header {
+            grid-column: span 2;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        .main-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .status-badge {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+        }
+
+        .section-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(to right, var(--secondary), transparent);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.6rem; }
+        .full-width { grid-column: span 2; }
+
+        label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        input, select {
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        .slider-container {
+            margin-top: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            background: transparent;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .analysis-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .result-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.4);
+            position: relative;
+            padding: 2rem;
+        }
+
+        .result-container.active-fraud {
+            border-color: var(--fraud);
+            box-shadow: inset 0 0 50px rgba(255, 0, 85, 0.1), 0 0 20px rgba(255, 0, 85, 0.2);
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: inset 0 0 50px rgba(255, 0, 85, 0.1), 0 0 20px rgba(255, 0, 85, 0.1); }
+            50% { box-shadow: inset 0 0 50px rgba(255, 0, 85, 0.2), 0 0 30px rgba(255, 0, 85, 0.3); }
+            100% { box-shadow: inset 0 0 50px rgba(255, 0, 85, 0.1), 0 0 20px rgba(255, 0, 85, 0.1); }
+        }
+
+        .result-container.active-safe {
+            border-color: var(--safe);
+            box-shadow: inset 0 0 50px rgba(0, 255, 170, 0.1), 0 0 20px rgba(0, 255, 170, 0.2);
+        }
+
+        .res-status {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+        }
+
+        .res-risk-badge {
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .risk-Critical { background: var(--fraud); color: white; }
+        .risk-High { background: #ff5500; color: white; }
+        .risk-Medium { background: var(--warning); color: black; }
+        .risk-Low { background: var(--safe); color: black; }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .metric-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+        }
+
+        .loader {
+            display: none;
+            width: 50px; height: 50px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .main-header { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header class="main-header">
+            <div>
+                <h1>FraudShield Pro</h1>
+                <p style="color: var(--text-dim)">AI Intelligence Prediction Engine v2.0</p>
+            </div>
+            <div class="status-badge">SYSTEM: ACTIVE</div>
+        </header>
+
+        <!-- INPUT PANEL -->
+        <div class="glass-card">
+            <div class="section-header"><i>⚡</i> Transaction Intelligence</div>
+            <form id="prediction-form">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Purchase Amount (USD)</label>
+                        <input type="number" id="TransactionAmt" value="150.00" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Card Identity (ID)</label>
+                        <input type="number" id="card1" value="15000">
+                    </div>
+                    <div class="form-group">
+                        <label>Card Type</label>
+                        <select id="card4">
+                            <option value="visa">Visa</option>
+                            <option value="mastercard">Mastercard</option>
+                            <option value="discover">Discover</option>
+                            <option value="american express">Amex</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Domain</label>
+                        <select id="P_emaildomain">
+                            <option value="gmail.com">Google (Gmail)</option>
+                            <option value="yahoo.com">Yahoo</option>
+                            <option value="hotmail.com">Microsoft (Hotmail)</option>
+                            <option value="icloud.com">Apple (iCloud)</option>
+                            <option value="other">Other Domain</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Category</label>
+                        <select id="ProductCD">
+                            <option value="W">Web Online</option>
+                            <option value="H">Handheld</option>
+                            <option value="S">Service</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Country</label>
+                        <select id="CurrentCountry">
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Location</label>
+                        <select id="LastCountry">
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                            <option value="UK">UK</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width slider-container">
+                        <label id="time-label">Time Since Last Transaction: 1.0 hours</label>
+                        <input type="range" id="HoursSinceLastTransaction" min="0" max="48" value="1" step="0.5" oninput="updateTimeLabel(this.value)">
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn">Run AI Analysis</button>
+                <div class="loader" id="loader"></div>
+            </form>
+        </div>
+
+        <!-- ANALYSIS PANEL -->
+        <div class="analysis-panel">
+            <div class="glass-card" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="section-header"><i>🧠</i> AI Verdict & Risk Profile</div>
+                
+                <div id="placeholder-text" style="text-align: center; color: var(--text-dim); margin-top: 5rem;">
+                    Enter transaction details to run the neural analysis engine.
+                </div>
+
+                <div class="result-container" id="result-container" style="display: none;">
+                    <div class="res-risk-badge" id="res-risk-badge">MEDIUM RISK</div>
+                    <div class="res-status" id="res-status">PENDING</div>
+                    <div id="res-reason" style="font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.9; font-weight: 600;">System Reason</div>
+                    <div id="res-score" style="font-family: 'JetBrains Mono'; opacity: 0.8;">Fraud Risk Score: 00.00%</div>
+                </div>
+
+                <div class="metric-grid" style="margin-top: 2rem;">
+                    <div class="metric-card">
+                        <div class="metric-val" id="met-avg">$0.00</div>
+                        <div class="metric-label">Card Avg Spend</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-val" id="met-freq">0</div>
+                        <div class="metric-label">Card Usage Freq</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTimeLabel(val) {
+            document.getElementById('time-label').innerText = `Time Since Last Transaction: ${val} hours`;
+        }
+
+        document.getElementById('prediction-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submit-btn');
+            const loader = document.getElementById('loader');
+            const placeholder = document.getElementById('placeholder-text');
+            const container = document.getElementById('result-container');
+            
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+            placeholder.style.display = 'none';
+            container.style.display = 'none';
+
+            const payload = {
+                TransactionID: Math.floor(Math.random() * 1000000),
+                TransactionDT: Math.floor(Date.now() / 1000),
+                TransactionAmt: parseFloat(document.getElementById('TransactionAmt').value),
+                ProductCD: document.getElementById('ProductCD').value,
+                card1: parseInt(document.getElementById('card1').value),
+                card2: 321.0,
+                card3: 150.0,
+                card4: document.getElementById('card4').value,
+                card5: 226.0,
+                card6: "debit",
+                addr1: 299.0,
+                addr2: 87.0,
+                P_emaildomain: document.getElementById('P_emaildomain').value,
+                CurrentCountry: document.getElementById('CurrentCountry').value,
+                LastCountry: document.getElementById('LastCountry').value,
+                HoursSinceLastTransaction: parseFloat(document.getElementById('HoursSinceLastTransaction').value)
+            };
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                // Update UI
+                document.getElementById('res-status').innerText = data.result;
+                document.getElementById('res-score').innerText = `Fraud Risk Score: ${data.confidence_score}`;
+                document.getElementById('res-reason').innerText = `Primary Factor: ${data.reason}`;
+                
+                const badge = document.getElementById('res-risk-badge');
+                badge.innerText = `${data.risk_level} RISK`;
+                badge.className = `res-risk-badge risk-${data.risk_level}`;
+
+                container.className = 'result-container ' + (data.result === 'Fraud' ? 'active-fraud' : 'active-safe');
+                container.style.display = 'flex';
+
+                // Mocking intelligence display (would come from stats in a real app)
+                document.getElementById('met-avg').innerText = `$${(data.result === 'Fraud' ? payload.TransactionAmt * 0.1 : payload.TransactionAmt * 0.9).toFixed(2)}`;
+                document.getElementById('met-freq').innerText = Math.floor(Math.random() * 50) + 1;
+
+            } catch (err) {
+                alert("Neural Engine Connection Error");
+                placeholder.style.display = 'block';
+            } finally {
+                btn.style.display = 'block';
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

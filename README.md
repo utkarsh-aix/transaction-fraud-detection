@@ -129,6 +129,3 @@ docker run -p 8000:8000 fraudshield-pro
 └── Dockerfile               # Containerization Config
 ```
 
----
-
-**Confidential Property | Developed for Funding Round 2026**

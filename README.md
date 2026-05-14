@@ -254,6 +254,3 @@ docker run -p 8000:8000 fraudshield-pro
 }
 ```
 
----
-
-**Developed for Funding Round 2026 | Apache 2.0 License**
